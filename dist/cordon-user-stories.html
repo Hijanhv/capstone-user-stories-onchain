@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Janhavi Chavada · Turbin3 Builders Cohort" />
+  <title>Cordon — User Stories &amp; On-Chain Requirements</title>
+  <style>
+
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">@page { size: A4; margin: 22mm 18mm; }
+body {
+font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 10.5pt;
+line-height: 1.45;
+color: #1a1a1a;
+max-width: none;
+}
+h1 { font-size: 20pt; margin-top: 1.6em; page-break-before: always; }
+h1:first-of-type { page-break-before: avoid; }
+h2 { font-size: 14pt; margin-top: 1.4em; border-bottom: 1px solid #ddd; padding-bottom: 0.2em; }
+h3 { font-size: 12pt; margin-top: 1.2em; }
+h4 { font-size: 11pt; margin-top: 1em; }
+p, li { orphans: 3; widows: 3; }
+code {
+font-family: "SF Mono", Menlo, Consolas, monospace;
+font-size: 9.5pt;
+background: #f4f4f4;
+padding: 0.1em 0.3em;
+border-radius: 3px;
+}
+pre {
+background: #f6f8fa;
+padding: 0.8em;
+border-radius: 4px;
+overflow-x: auto;
+font-size: 9pt;
+}
+pre code { background: transparent; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; font-size: 10pt; }
+th, td { border: 1px solid #ccc; padding: 0.4em 0.6em; text-align: left; vertical-align: top; }
+th { background: #f0f0f0; }
+blockquote {
+border-left: 3px solid #888;
+margin-left: 0;
+padding-left: 1em;
+color: #444;
+font-style: italic;
+}
+hr { border: none; border-top: 1px solid #ccc; margin: 1.6em 0; }
+a { color: #0366d6; text-decoration: none; }
+ul, ol { padding-left: 1.4em; }
+.title-block { margin-bottom: 2em; }
+.title-block h1 { page-break-before: avoid; border-bottom: 2px solid #1a1a1a; padding-bottom: 0.3em; }
+nav#TOC { page-break-after: always; }
+nav#TOC ul { list-style: none; padding-left: 1em; }
+nav#TOC > ul { padding-left: 0; }
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Cordon — User Stories &amp; On-Chain Requirements</h1>
+<p class="author">Janhavi Chavada · Turbin3 Builders Cohort</p>
+<p class="date">May 2026</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#part-a-user-stories-on-chain-requirements" id="toc-part-a-user-stories-on-chain-requirements">Part A — User Stories
+&amp; On-Chain Requirements</a>
+<ul>
+<li><a href="#refined-value-proposition-one-line-recap" id="toc-refined-value-proposition-one-line-recap">1. Refined value
+proposition (one-line recap)</a></li>
+<li><a href="#core-user-personas-final-4" id="toc-core-user-personas-final-4">2. Core user personas (final,
+4)</a></li>
+<li><a href="#function-map" id="toc-function-map">3. Function
+map</a></li>
+<li><a href="#top-critical-user-interactions-for-the-poc" id="toc-top-critical-user-interactions-for-the-poc">4. Top critical user
+interactions for the POC</a></li>
+<li><a href="#final-user-stories-atomic-de-jargoned" id="toc-final-user-stories-atomic-de-jargoned">5. Final user stories
+(atomic, de-jargoned)</a></li>
+<li><a href="#potential-on-chain-requirements-per-story" id="toc-potential-on-chain-requirements-per-story">6. Potential on-chain
+requirements per story</a></li>
+<li><a href="#open-questions-handed-to-the-next-assignment" id="toc-open-questions-handed-to-the-next-assignment">7. Open questions
+handed to the next assignment</a></li>
+</ul></li>
+<li><a href="#part-b-process-appendix" id="toc-part-b-process-appendix">Part B — Process Appendix</a>
+<ul>
+<li><a href="#b.1-inputs" id="toc-b.1-inputs">B.1 — Inputs</a></li>
+<li><a href="#b.2-manual-brainstorm-of-user-types-part-a.1" id="toc-b.2-manual-brainstorm-of-user-types-part-a.1">B.2 — Manual
+brainstorm of user types (Part A.1)</a></li>
+<li><a href="#b.3-ai-prioritization-prompt-part-a.2" id="toc-b.3-ai-prioritization-prompt-part-a.2">B.3 — AI prioritization
+prompt (Part A.2)</a></li>
+<li><a href="#b.4-function-mapping-prompt-part-a.3" id="toc-b.4-function-mapping-prompt-part-a.3">B.4 — Function mapping
+prompt (Part A.3)</a></li>
+<li><a href="#b.5-top-critical-interactions-and-initial-technical-requirements-part-a.4" id="toc-b.5-top-critical-interactions-and-initial-technical-requirements-part-a.4">B.5
+— Top critical interactions and initial technical requirements (Part
+A.4)</a></li>
+<li><a href="#b.6-adversarial-critique-part-b" id="toc-b.6-adversarial-critique-part-b">B.6 — Adversarial critique
+(Part B)</a></li>
+<li><a href="#b.7-part-c-refinement-log-granularity-atomicity-de-jargon" id="toc-b.7-part-c-refinement-log-granularity-atomicity-de-jargon">B.7 —
+Part C refinement log (granularity, atomicity, de-jargon)</a></li>
+<li><a href="#b.8-part-d-approach-notes" id="toc-b.8-part-d-approach-notes">B.8 — Part D approach notes</a></li>
+<li><a href="#appendix-sources" id="toc-appendix-sources">Appendix —
+Sources</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="part-a-user-stories-on-chain-requirements">Part A — User Stories
+&amp; On-Chain Requirements</h1>
+<p><strong>Project:</strong> Cordon — transaction firewall for Solana AI
+agents <strong>Author:</strong> Janhavi Chavada · Turbin3 Builders
+Cohort <strong>Input document:</strong> <a href="https://github.com/Hijanhv/cordon"><code>cordon-proposal.pdf</code></a>
+(Capstone Assignment 1)</p>
+<p>This document is the clean, final deliverable. The process — prompts,
+AI outputs, my critiques, refinement log — lives in <a href="./part-b-process-appendix.md"><code>part-b-process-appendix.md</code></a>.</p>
+<hr />
+<h2 id="refined-value-proposition-one-line-recap">1. Refined value
+proposition (one-line recap)</h2>
+<p>Cordon sits between an AI agent’s signing path and the Solana
+network. Every transaction the agent wants to broadcast first gets
+simulated, then policy-checked against an on-chain Anchor program, then
+(when flagged) queued for a human approver before it ever hits the
+network. Policies, the approver set, and the kill switch live on-chain
+so a single operator can’t quietly raise a cap or remove a control.</p>
+<p>The POC has to prove <strong>one loop end-to-end</strong>: an agent’s
+intent is intercepted, checked against on-chain policy, and either
+auto-broadcast or routed to a human approver who decides. Everything in
+this document is scoped to that loop.</p>
+<hr />
+<h2 id="core-user-personas-final-4">2. Core user personas (final,
+4)</h2>
+<p>The brainstorm produced ~12 candidate user types (see appendix B.2).
+Four made it through prioritization. The rest are either downstream
+consumers of POC outputs (compliance reader, end user of an
+agent-managed treasury, protocol risk manager) or post-POC stakeholders
+(insurance underwriter, regulator). They are not in the critical path
+for proving the loop works.</p>
+<h3 id="p1-agent-integrator">P1 — Agent integrator</h3>
+<p>The developer who drops <code>cordon-rs</code> (or its TypeScript
+binding) into an agent codebase. Writes the initial policy, wires the
+agent’s signing path through the SDK, points the dashboard at the right
+program ID. Primary buyer.</p>
+<h3 id="p2-agent-signer">P2 — Agent signer</h3>
+<p>The programmatic actor running inside the integrator’s agent — the
+runtime entity that builds and submits transaction intents through the
+SDK. <strong>Not</strong> the same as the integrator: the integrator
+writes the agent’s code; the agent signer is the running process whose
+intents Cordon intercepts. Drawing this line matters because the
+integrator has policy-mutation rights and the agent signer does not.</p>
+<h3 id="p3-approver">P3 — Approver</h3>
+<p>A human (or, in production, a Squads multisig) listed in the policy’s
+approver set. Watches the Next.js dashboard. Approves or rejects flagged
+intents.</p>
+<h3 id="p4-policy-authority">P4 — Policy authority</h3>
+<p>The on-chain owner of the policy registry account for a given agent.
+Mutates spend caps, allowlists, time windows, the approver set, and the
+kill switch. Day-1 default is the integrator’s wallet; production target
+is a multisig or DAO. Distinct from the approver: the policy authority
+changes the rules; the approver applies them on a single pending
+transaction.</p>
+<h3 id="why-these-four-and-not-more">Why these four and not more</h3>
+<p>The minimal cast that fully exercises the loop is: someone who
+configured it (P1 + P4), the actor whose intents get checked (P2), the
+human who decides on flagged ones (P3). Add a fifth and you’re adding
+someone who reads outputs, not someone who drives the critical path. The
+cohort timeline doesn’t have room for personas that don’t shift the POC
+scope.</p>
+<hr />
+<h2 id="function-map">3. Function map</h2>
+<p>One concrete, single-action function per row. No “manages” or
+“configures” — those are categories, not actions.</p>
+<h3 id="p1-agent-integrator-1">P1 — Agent integrator</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F1.1</td>
+<td>Installs the Cordon SDK in their agent project</td>
+</tr>
+<tr>
+<td>F1.2</td>
+<td>Generates the agent signer keypair the SDK will wrap</td>
+</tr>
+<tr>
+<td>F1.3</td>
+<td>Calls <code>register_agent</code> on-chain to create the policy
+account</td>
+</tr>
+<tr>
+<td>F1.4</td>
+<td>Reads the agent’s pending-approval queue from the dashboard</td>
+</tr>
+<tr>
+<td>F1.5</td>
+<td>Reads the on-chain audit log for their agent</td>
+</tr>
+</tbody>
+</table>
+<h3 id="p2-agent-signer-1">P2 — Agent signer</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F2.1</td>
+<td>Builds an intended Solana transaction</td>
+</tr>
+<tr>
+<td>F2.2</td>
+<td>Submits the intent to Cordon for a policy check</td>
+</tr>
+<tr>
+<td>F2.3</td>
+<td>Receives an auto-approval and broadcasts the original
+transaction</td>
+</tr>
+<tr>
+<td>F2.4</td>
+<td>Receives a “queued for HITL” response and pauses</td>
+</tr>
+<tr>
+<td>F2.5</td>
+<td>Receives a “policy denied” response and aborts</td>
+</tr>
+<tr>
+<td>F2.6</td>
+<td>Receives an approver’s decision on a previously queued intent</td>
+</tr>
+</tbody>
+</table>
+<h3 id="p3-approver-1">P3 — Approver</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F3.1</td>
+<td>Connects their wallet to the dashboard</td>
+</tr>
+<tr>
+<td>F3.2</td>
+<td>Views the pending-approval queue for an agent they’re listed on</td>
+</tr>
+<tr>
+<td>F3.3</td>
+<td>Opens a pending intent and reads the simulation output plus the
+policy reason it was flagged</td>
+</tr>
+<tr>
+<td>F3.4</td>
+<td>Approves a pending intent</td>
+</tr>
+<tr>
+<td>F3.5</td>
+<td>Rejects a pending intent</td>
+</tr>
+<tr>
+<td>F3.6</td>
+<td>Views past decisions (their own and other approvers’)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="p4-policy-authority-1">P4 — Policy authority</h3>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>#</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>F4.1</td>
+<td>Sets the per-asset spend cap on the policy account</td>
+</tr>
+<tr>
+<td>F4.2</td>
+<td>Adds a program ID to the CPI allowlist</td>
+</tr>
+<tr>
+<td>F4.3</td>
+<td>Removes a program ID from the CPI allowlist</td>
+</tr>
+<tr>
+<td>F4.4</td>
+<td>Adds an approver public key to the approver set</td>
+</tr>
+<tr>
+<td>F4.5</td>
+<td>Removes an approver public key from the approver set</td>
+</tr>
+<tr>
+<td>F4.6</td>
+<td>Flips the kill switch (pauses all of the agent’s intents)</td>
+</tr>
+<tr>
+<td>F4.7</td>
+<td>Transfers policy authority to a new wallet (e.g., a Squads
+multisig)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="top-critical-user-interactions-for-the-poc">4. Top critical user
+interactions for the POC</h2>
+<p>Two interaction paths. They share most of the on-chain machinery, so
+building one gets you most of the other.</p>
+<h3 id="path-a-auto-approval-loop">Path A — Auto-approval loop</h3>
+<p>The agent submits an intent. The on-chain policy check passes (under
+the spend cap, target program is on the allowlist, inside the time
+window, under the rate limit). The SDK broadcasts the original
+transaction. The decision is written to the on-chain log.</p>
+<h3 id="path-b-hitl-loop">Path B — HITL loop</h3>
+<p>The agent submits an intent. The on-chain policy check fails one or
+more rules. A <code>PendingApproval</code> account is created. The
+agent’s submit call returns “queued.” The approver sees the queued
+intent in the dashboard, opens it, and either approves or rejects. On
+approval, the SDK broadcasts. On rejection or expiry, the intent is
+dropped. Either way, the decision is written to the on-chain log.</p>
+<p>These two paths cover every persona, every Cordon-side instruction
+the POC needs, and every account type. If both work end-to-end on
+devnet, the POC is done.</p>
+<hr />
+<h2 id="final-user-stories-atomic-de-jargoned">5. Final user stories
+(atomic, de-jargoned)</h2>
+<p>Output of Part C (full refinement log in appendix B.7). Each story is
+a single action, in plain language, with a clear actor and outcome.
+Numbering is stable so the on-chain requirements in §6 can reference
+back.</p>
+<h3 id="setup-stories">Setup stories</h3>
+<ul>
+<li><strong>S1.</strong> As an integrator, I install the Cordon SDK in
+my agent’s project.</li>
+<li><strong>S2.</strong> As an integrator, I generate the keypair my
+agent will sign with.</li>
+<li><strong>S3.</strong> As an integrator, I create my agent’s on-chain
+policy account.</li>
+<li><strong>S4.</strong> As a policy authority, I set the per-asset
+spend cap on the policy account.</li>
+<li><strong>S5.</strong> As a policy authority, I add a target program
+to the allowlist.</li>
+<li><strong>S6.</strong> As a policy authority, I add an approver’s
+public key to the approver set.</li>
+</ul>
+<h3 id="runtime-stories-auto-approval-path">Runtime stories —
+auto-approval path</h3>
+<ul>
+<li><strong>S7.</strong> As an agent signer, I build a transaction I
+want to broadcast.</li>
+<li><strong>S8.</strong> As an agent signer, I submit that transaction
+to Cordon for a policy check.</li>
+<li><strong>S9.</strong> As Cordon, I record the intent on-chain so the
+decision is auditable.</li>
+<li><strong>S10.</strong> As Cordon, I check the intent against the
+policy account’s rules.</li>
+<li><strong>S11.</strong> As Cordon, I mark the intent approved when
+every rule passes.</li>
+<li><strong>S12.</strong> As an agent signer, I broadcast the original
+transaction once Cordon marks the intent approved.</li>
+</ul>
+<h3 id="runtime-stories-hitl-path">Runtime stories — HITL path</h3>
+<ul>
+<li><strong>S13.</strong> As Cordon, I mark the intent as pending when
+one or more rules fail.</li>
+<li><strong>S14.</strong> As Cordon, I record the specific rule that
+triggered the pending state.</li>
+<li><strong>S15.</strong> As an approver, I open the dashboard and see
+every pending intent on agents I’m listed on.</li>
+<li><strong>S16.</strong> As an approver, I open a single pending intent
+and read its simulation output and the rule it tripped.</li>
+<li><strong>S17.</strong> As an approver, I approve a pending
+intent.</li>
+<li><strong>S18.</strong> As an approver, I reject a pending
+intent.</li>
+<li><strong>S19.</strong> As an agent signer, I broadcast the original
+transaction once an approver marks the pending intent approved.</li>
+<li><strong>S20.</strong> As an agent signer, I drop the transaction
+when an approver rejects it or the pending intent expires.</li>
+</ul>
+<h3 id="governance-stories">Governance stories</h3>
+<ul>
+<li><strong>S21.</strong> As a policy authority, I flip the kill switch
+to pause every new intent for my agent.</li>
+<li><strong>S22.</strong> As a policy authority, I transfer policy
+authority to a new wallet.</li>
+</ul>
+<h3 id="read-stories">Read stories</h3>
+<ul>
+<li><strong>S23.</strong> As an integrator, I read my agent’s
+pending-approval queue.</li>
+<li><strong>S24.</strong> As an integrator, I read my agent’s on-chain
+decision log for a date range.</li>
+</ul>
+<hr />
+<h2 id="potential-on-chain-requirements-per-story">6. Potential on-chain
+requirements per story</h2>
+<p>Brainstorm output (Part D). Each story is followed by a bulleted list
+of on-chain needs. These are deliberately at the requirement level — not
+the implementation level — so the next assignment (smart-contract
+architecture) can decide between competing designs. “PDA” and
+“instruction” are used because Cordon is Anchor; that’s not jargon at
+the requirements stage, it’s the substrate.</p>
+<p>Anchor program working name: <code>cordon_policy</code>. Two account
+types carry most of the state: <code>Policy</code> (one per agent, owns
+the rules and the approver set) and <code>Intent</code> (one per
+submitted transaction, owns its lifecycle).</p>
+<h3 id="setup">Setup</h3>
+<p><strong>S1 — Integrator installs the SDK</strong> - No on-chain
+requirements. Off-chain only (Cargo / npm).</p>
+<p><strong>S2 — Integrator generates the agent signer keypair</strong> -
+No on-chain requirements at this step. The keypair only matters once it
+signs.</p>
+<p><strong>S3 — Integrator creates the agent’s policy account</strong> -
+Need a <code>register_agent</code> instruction. - It creates a
+<code>Policy</code> PDA with seeds
+<code>[b&quot;policy&quot;, agent_signer_pubkey]</code>. - The <code>Policy</code>
+stores the policy authority’s pubkey, the agent signer’s pubkey, a
+<code>paused</code> flag (default <code>false</code>), a
+<code>bump</code>. - The <code>Policy</code> initializes empty
+containers for the allowlist, approver set, and rule fields. - The
+instruction fails if a <code>Policy</code> already exists for that agent
+signer. - The instruction emits a <code>PolicyCreated</code> event for
+the audit log.</p>
+<p><strong>S4 — Policy authority sets the spend cap</strong> - Need a
+<code>set_spend_cap</code> instruction. - It mutates
+<code>Policy.spend_cap_lamports</code> (per-asset cap — for the POC,
+just SOL; extend per-mint later). - It is gated on the signer matching
+<code>Policy.authority</code>. - It emits a <code>PolicyChanged</code>
+event with the old and new cap. - It fails if the <code>Policy</code> is
+paused (kill-switch state) so that paused policies can’t be silently
+re-tuned.</p>
+<p><strong>S5 — Policy authority adds a program to the
+allowlist</strong> - Need an <code>allowlist_add</code> instruction. -
+It pushes a program ID onto <code>Policy.allowed_programs</code>
+(bounded vec, e.g. max 32 entries; size pre-allocated to avoid
+reallocation cost). - It is gated on <code>Policy.authority</code>. - It
+fails if the program ID is already on the list (idempotency / duplicate
+prevention). - It emits a <code>PolicyChanged</code> event.</p>
+<p><strong>S6 — Policy authority adds an approver</strong> - Need an
+<code>approver_add</code> instruction. - It pushes a pubkey onto
+<code>Policy.approvers</code> (bounded vec, e.g. max 8). - It is gated
+on <code>Policy.authority</code>. - It fails if the pubkey is already in
+the set. - It emits a <code>PolicyChanged</code> event.</p>
+<h3 id="auto-approval-runtime-path">Auto-approval runtime path</h3>
+<p><strong>S7 — Agent signer builds a transaction</strong> - No on-chain
+requirements. The agent assembles the tx off-chain via the SDK.</p>
+<p><strong>S8 — Agent signer submits the intent to Cordon</strong> -
+Need a <code>submit_intent</code> instruction. - It creates an
+<code>Intent</code> PDA with seeds
+<code>[b&quot;intent&quot;, agent_signer_pubkey, policy.nonce.to_le_bytes()]</code>,
+where <code>policy.nonce</code> is a monotonic counter on
+<code>Policy</code> (incremented atomically inside this instruction). -
+The <code>Intent</code> stores a hash of the original transaction
+message (not the full tx — keeps account size bounded), the target
+program IDs the tx CPIs into, the lamports moved, the timestamp, the
+submitter, and a <code>status</code> enum (<code>Submitted</code>,
+<code>AutoApproved</code>, <code>Pending</code>,
+<code>HumanApproved</code>, <code>Rejected</code>,
+<code>Expired</code>). - The signer must match
+<code>Policy.agent_signer</code>. - The instruction fails if
+<code>Policy.paused</code> is <code>true</code> (kill switch honored at
+submission, not just at check). - It emits an
+<code>IntentSubmitted</code> event.</p>
+<p><strong>S9 — Cordon records the intent on-chain</strong> - Covered by
+S8 — the <code>Intent</code> account <em>is</em> the on-chain record.
+The append-only audit trail is the set of <code>Intent</code> accounts
+plus the event stream; no separate “log” account needed.</p>
+<p><strong>S10 — Cordon checks the intent against the policy</strong> -
+Need a <code>check_intent</code> instruction (could be folded into
+<code>submit_intent</code> for the POC; kept separate here in case
+off-chain simulation needs to run between the two). - It reads the
+<code>Intent</code> and the matching <code>Policy</code>. - It
+evaluates: <code>lamports &lt;= spend_cap</code>, every CPI target ∈
+<code>allowed_programs</code>, current slot/clock is inside the time
+window, and the per-rate-limit-period count is under the cap (rate-limit
+counter is stored on <code>Policy</code> with a sliding window or a
+simple “count + window start”). - It writes <code>Intent.status</code>
+based on the result (<code>AutoApproved</code> or <code>Pending</code>).
+- It writes <code>Intent.failure_reason</code> (a small enum:
+<code>OverCap</code>, <code>ProgramNotAllowed</code>,
+<code>OutsideTimeWindow</code>, <code>RateLimited</code>) when
+transitioning to <code>Pending</code>, so the dashboard can show
+<em>why</em> without recomputing.</p>
+<p><strong>S11 — Cordon marks the intent approved when every rule
+passes</strong> - Covered by S10’s state transition to
+<code>AutoApproved</code>. - It emits an <code>IntentAutoApproved</code>
+event.</p>
+<p><strong>S12 — Agent signer broadcasts the approved
+transaction</strong> - No additional on-chain requirements for the
+broadcast itself (broadcast is just sending the tx to RPC). - Requires
+that the SDK can prove approval to itself before broadcasting; reading
+<code>Intent.status == AutoApproved</code> is sufficient. - Optional
+hardening for later: a separate <code>release</code> instruction that
+burns the <code>Intent</code> account and returns rent to the
+integrator, called after broadcast confirms.</p>
+<h3 id="hitl-runtime-path">HITL runtime path</h3>
+<p><strong>S13 — Cordon marks intent as pending when a rule
+fails</strong> - Covered by S10’s state transition to
+<code>Pending</code>. - It emits an <code>IntentPending</code> event
+with the rule that tripped it (the same data written to
+<code>Intent.failure_reason</code>).</p>
+<p><strong>S14 — Cordon records which rule was tripped</strong> -
+Covered by S10 via <code>Intent.failure_reason</code>.</p>
+<p><strong>S15 — Approver sees pending intents for agents they’re
+on</strong> - No new on-chain instruction. The dashboard reads pending
+intents via <code>getProgramAccounts</code> with a memcmp filter on
+<code>Intent.status == Pending</code> plus a filter on
+<code>Intent.agent_signer ∈ {agents where this approver is in Policy.approvers}</code>.
+- Requires <code>Intent</code> account layout to be memcmp-friendly: the
+<code>status</code> byte at a fixed, low offset;
+<code>agent_signer</code> at a fixed offset.</p>
+<p><strong>S16 — Approver opens a single pending intent</strong> - No
+on-chain instruction. Read-only fetch of one <code>Intent</code>
+account, plus the matching <code>Policy</code> for context. - Requires
+<code>Intent.failure_reason</code> and the cached lamports / CPI target
+list to be on the account (so the dashboard doesn’t need to recompute or
+re-fetch the original tx to explain the flag).</p>
+<p><strong>S17 — Approver approves a pending intent</strong> - Need an
+<code>approve_pending</code> instruction. - It is gated on the signer
+being in <code>Policy.approvers</code>. - It is gated on
+<code>Intent.status == Pending</code>. - It transitions
+<code>Intent.status</code> to <code>HumanApproved</code>. - It writes
+<code>Intent.approver</code> and <code>Intent.decided_at_slot</code>. -
+It fails if the intent has expired
+(<code>current_slot &gt; Intent.submitted_at_slot + Policy.pending_ttl_slots</code>);
+in that case the instruction transitions <code>Intent.status</code> to
+<code>Expired</code> instead. - It emits an
+<code>IntentHumanApproved</code> event. - (For the POC, single-signature
+approval is enough. Multi-signature approval — m-of-n on
+<code>Policy.approvers</code> — is a clean extension: store an approval
+bitmap on <code>Intent</code>, count signatures, transition state when
+the threshold is met.)</p>
+<p><strong>S18 — Approver rejects a pending intent</strong> - Need a
+<code>reject_pending</code> instruction. - Same gating as S17 (signer in
+<code>Policy.approvers</code>, status <code>Pending</code>). -
+Transitions <code>Intent.status</code> to <code>Rejected</code>. -
+Writes <code>Intent.approver</code>,
+<code>Intent.decided_at_slot</code>, and optionally a small
+<code>Intent.reject_reason</code> enum. - Emits an
+<code>IntentRejected</code> event.</p>
+<p><strong>S19 — Agent signer broadcasts after human approval</strong> -
+Same as S12. SDK reads <code>Intent.status == HumanApproved</code>
+before broadcasting.</p>
+<p><strong>S20 — Agent signer drops the transaction on rejection or
+expiry</strong> - No on-chain instruction required. The SDK reads
+<code>Intent.status ∈ {Rejected, Expired}</code> and aborts. - Requires
+the expiry semantics from S17 to be enforced <em>on-chain</em> at the
+next <code>approve_pending</code> / <code>reject_pending</code> call, OR
+an explicit <code>expire_intent</code> instruction that anyone can call.
+The latter is cleaner because it doesn’t require waiting for the next
+approver action to garbage-collect.</p>
+<h3 id="governance">Governance</h3>
+<p><strong>S21 — Policy authority flips the kill switch</strong> - Need
+a <code>set_paused</code> instruction. - It mutates
+<code>Policy.paused</code>. - It is gated on
+<code>Policy.authority</code>. - It emits a <code>PolicyChanged</code>
+event. - It affects <code>submit_intent</code> (S8 fails when paused)
+and <code>set_spend_cap</code> (S4 fails when paused, so a compromised
+authority can’t pause-then-loosen). - Open question for the next
+assignment: should <code>approve_pending</code> also fail when paused?
+Argument for: kill switch is total. Argument against: an approver may
+want to reject queued intents while paused. Default to “approve fails,
+reject still works” — the kill switch should never block a
+<em>safer</em> action.</p>
+<p><strong>S22 — Policy authority transfers authority</strong> - Need a
+<code>transfer_authority</code> instruction. - It mutates
+<code>Policy.authority</code> to a new pubkey. - It is gated on the
+current <code>Policy.authority</code>. - Should be a two-step transfer
+(propose → accept) to avoid transferring authority to a pubkey nobody
+controls. Adds a <code>Policy.pending_authority</code> field. - Emits a
+<code>PolicyChanged</code> event.</p>
+<h3 id="read-stories-1">Read stories</h3>
+<p><strong>S23 — Integrator reads the pending queue</strong> - No
+on-chain instruction. <code>getProgramAccounts</code> with a memcmp
+filter on <code>status == Pending</code> and
+<code>agent_signer == &lt;theirs&gt;</code>. - Requires the
+account-layout property already noted in S15.</p>
+<p><strong>S24 — Integrator reads the decision log for a date
+range</strong> - No on-chain instruction. The decision log is the set of
+<code>Intent</code> accounts with a terminal status
+(<code>AutoApproved</code>, <code>HumanApproved</code>,
+<code>Rejected</code>, <code>Expired</code>). - Date-range filtering:
+<code>Intent.submitted_at_slot</code> is on the account; the SDK
+converts slot ranges to wall-clock via <code>getBlockTime</code>. - For
+the POC this is acceptable; for production, the volume of
+<code>Intent</code> accounts will require either (a) a
+<code>release</code> instruction that closes terminal intents after
+archiving them off-chain to an indexer, or (b) a compression scheme. Out
+of scope for this assignment, flagged for architecture.</p>
+<hr />
+<h2 id="open-questions-handed-to-the-next-assignment">7. Open questions
+handed to the next assignment</h2>
+<p>These are the things I deliberately didn’t decide here, because they
+belong in the architecture assignment (smart contract design and
+diagramming), not in requirements.</p>
+<ol type="1">
+<li><strong>Should <code>check_intent</code> be a separate instruction
+or folded into <code>submit_intent</code>?</strong> Trade-off:
+separating it lets off-chain simulation happen between the two, but
+doubles the round trips. Likely fold them together for the POC and split
+if simulation needs the gap.</li>
+<li><strong>Account size for the bounded vecs (allowlist,
+approvers).</strong> Picked illustrative maxes (32 programs, 8
+approvers); the architecture assignment should pick real ones based on
+rent cost and realistic fleet shapes.</li>
+<li><strong>Rate-limit window representation.</strong> Sliding window
+vs. fixed window vs. token bucket — each has different on-chain math.
+Picking one is an architecture call.</li>
+<li><strong>Intent garbage collection.</strong> Either a
+<code>release</code> instruction or some kind of compression. Required
+before mainnet, not required for the devnet POC.</li>
+<li><strong>Squads integration for the approver path.</strong> The
+persona definition assumes an approver could be a Squads multisig, but
+how Cordon verifies a Squads approval signature inside
+<code>approve_pending</code> is an architecture question, not a
+requirements one.</li>
+</ol>
+<h1 id="part-b-process-appendix">Part B — Process Appendix</h1>
+<p>The clean deliverable lives in <a href="./part-a-deliverable.md"><code>part-a-deliverable.md</code></a>.
+This file is the log of how I got there: prompts I ran, what the AI gave
+back, what I agreed with, what I overrode, and the explicit before/after
+refinement log for Part C.</p>
+<h2 id="b.1-inputs">B.1 — Inputs</h2>
+<p>The single input to this assignment is the refined project proposal
+from the previous Capstone assignment (<code>cordon-proposal.pdf</code>,
+included at the root of this repo). The value proposition I’m carrying
+forward, verbatim from §1 of that proposal:</p>
+<blockquote>
+<p>Cordon is the policy enforcement and HITL approval layer that sits
+between an AI agent’s intent and the Solana network. You drop the Rust
+SDK (<code>cordon-rs</code>) or its TypeScript binding into any agent
+built on SendAI Agent Kit, Arc, or a custom Rig pipeline. You write your
+policies once into an Anchor program: per-asset spend caps, an allowlist
+of programs the agent can CPI into, time-of-day windows, rate limits,
+daily volume ceilings, anomaly thresholds. Anything the policy doesn’t
+auto-approve gets pushed to a Next.js dashboard where authorized signers
+approve or reject before the agent broadcasts.</p>
+</blockquote>
+<p>Three target user <em>segments</em> came out of that assignment:
+agent dev teams (primary), hackathon teams (beachhead), and protocols /
+DAOs (expansion). This assignment narrows from segments to
+<strong>personas inside one agent deployment</strong>, which is a
+different cut.</p>
+<hr />
+<h2 id="b.2-manual-brainstorm-of-user-types-part-a.1">B.2 — Manual
+brainstorm of user types (Part A.1)</h2>
+<p>Before prompting the AI, I wrote down every user type that could
+plausibly interact with a single Cordon deployment, by the four
+categories the assignment asks for.</p>
+<h3 id="direct-users">Direct users</h3>
+<ul>
+<li><strong>Agent integrator</strong> — the developer installing the SDK
+into their agent codebase.</li>
+<li><strong>Agent signer</strong> — the programmatic actor inside the
+agent that builds and submits transactions.</li>
+<li><strong>Approver</strong> — the human reviewing flagged intents in
+the dashboard.</li>
+<li><strong>Policy author</strong> — the person writing the policy
+rules. (Often the integrator on day 1.)</li>
+<li><strong>Policy authority</strong> — the on-chain owner of the policy
+registry account (often a multisig).</li>
+</ul>
+<h3 id="indirect-users-beneficiaries">Indirect users /
+beneficiaries</h3>
+<ul>
+<li><strong>End user of an agent-managed treasury</strong> — e.g. a DAO
+member whose funds the agent manages. Doesn’t touch Cordon directly but
+benefits when a bad intent gets blocked.</li>
+<li><strong>Token holders of a DAO whose treasury is
+agent-managed</strong> — same as above but at protocol level.</li>
+<li><strong>Protocol risk manager</strong> — at Drift, Jupiter, Kamino,
+etc. — wants to know the agents integrating with their protocol have
+firewalls in front of them.</li>
+</ul>
+<h3 id="administrators-moderators">Administrators / moderators</h3>
+<ul>
+<li><strong>Cordon platform operator (me)</strong> — running the free
+hosted tier of the dashboard.</li>
+<li><strong>Compliance officer / auditor</strong> — at an enterprise
+running Cordon, reads the on-chain audit log to verify controls.</li>
+<li><strong>Incident responder</strong> — during a live security event,
+needs to pause an agent fast.</li>
+</ul>
+<h3 id="stakeholders">Stakeholders</h3>
+<ul>
+<li><strong>Founder / engineering lead</strong> at the agent dev company
+— owns the buying decision.</li>
+<li><strong>Insurance underwriter</strong> — would underwrite agent
+operations differently with Cordon in front of them.</li>
+<li><strong>Regulator</strong> — cares about the audit log existing, not
+about using Cordon directly.</li>
+<li><strong>Integration partners</strong> — Squads (HITL signing
+target), SendAI (host for Cordon as a plugin).</li>
+</ul>
+<p>Twelve user types total. This is the input to the prioritization
+step.</p>
+<hr />
+<h2 id="b.3-ai-prioritization-prompt-part-a.2">B.3 — AI prioritization
+prompt (Part A.2)</h2>
+<p><strong>My prompt:</strong></p>
+<blockquote>
+<p>My project’s value proposition is: Cordon is a policy enforcement and
+HITL approval layer for AI agents on Solana. The SDK intercepts every
+transaction the agent wants to broadcast, checks it against an on-chain
+Anchor policy program (spend caps, CPI allowlist, time windows, rate
+limits), and routes flagged transactions to a human approver in a
+Next.js dashboard. Policies and the approver set live on-chain, owned by
+an authority that can be a multisig or DAO.</p>
+<p>Here is a brainstormed list of all potential user types: [pasted the
+12 from B.2 verbatim].</p>
+<p>Based on the value proposition, which 2–5 of these user types are the
+most critical to focus on for an initial Proof-of-Concept? For each user
+you recommend, provide a brief rationale.</p>
+</blockquote>
+<p><strong>Synthesized AI output:</strong></p>
+<p>The AI recommended five: agent integrator, agent signer, approver,
+policy authority, and compliance officer. Its rationales for the first
+four were essentially what I’d written myself. Its rationale for the
+compliance officer was “they validate the audit log property of the
+system, which is a core value area.”</p>
+<p><strong>My take and final decision:</strong></p>
+<p>I kept four of the five and dropped compliance officer. The
+compliance officer reads outputs that the other four produce; they don’t
+drive the loop. Including them as a POC persona would add user stories
+(S-something: compliance officer queries the audit log for a date range)
+that depend on every other persona’s stories already working. Including
+them inflates scope without proving anything new.</p>
+<p>I also collapsed “policy author” and “policy authority” from my
+brainstorm into a single persona (P4). They are functionally the same on
+day 1, and the distinction (someone who <em>drafts</em> policy text
+vs. someone who <em>signs the on-chain mutation</em>) only matters when
+there’s a policy review process between drafting and signing — which is
+post-POC.</p>
+<p>Final four personas: P1 integrator, P2 agent signer, P3 approver, P4
+policy authority. See deliverable §2.</p>
+<p><strong>Where I disagreed with the AI:</strong> the compliance
+officer call. It’s not that the persona is wrong — it’s that they’re a
+<em>consumer</em> of POC outputs, not a <em>driver</em> of them, and the
+POC is scope-limited to what proves the loop.</p>
+<p><strong>Where I agreed:</strong> the disambiguation between
+integrator (writes code) and agent signer (runs code). The AI’s framing
+here was tighter than my brainstorm draft and I kept it.</p>
+<hr />
+<h2 id="b.4-function-mapping-prompt-part-a.3">B.4 — Function mapping
+prompt (Part A.3)</h2>
+<p><strong>My prompt:</strong></p>
+<blockquote>
+<p>For Cordon (value prop above) and focusing on these four prioritized
+user types — integrator, agent signer, approver, policy authority — help
+map out the key functions or interactions each user would need to
+perform. Keep functions concrete and single-action; avoid wrapper verbs
+like “manage” or “configure.”</p>
+</blockquote>
+<p><strong>Synthesized AI output:</strong></p>
+<p>A function map roughly matching the table in deliverable §3, with
+these differences:</p>
+<ul>
+<li>The AI gave the integrator a function “monitors agent activity” — I
+dropped it. “Monitors” is a category, not an action. I broke the
+underlying need into F1.4 (read pending queue) and F1.5 (read audit
+log), which are concrete.</li>
+<li>The AI gave the agent signer a single function “submits transactions
+and handles responses.” I split it into F2.1–F2.6 because the response
+handling has three distinct branches (auto-approved, queued, denied) and
+the queued branch has a second event (approver decision) that arrives
+later.</li>
+<li>The AI did not include the kill switch (F4.6) or the authority
+transfer (F4.7). I added both manually. The kill switch is the single
+most important governance function — without it the “operator can’t
+quietly mutate policy” value claim doesn’t hold. The authority transfer
+is the mechanism that makes “policy authority can be a multisig or DAO”
+a real property, not just a slogan.</li>
+<li>The AI grouped “add approver” and “remove approver” into one
+function. I split them (F4.4 / F4.5) because they’re two distinct
+on-chain instructions with distinct gating concerns.</li>
+</ul>
+<p>The AI’s wrapper-verb tendency is a real anti-pattern for this
+exercise. Functions like “manages policies” are useless input for
+translating into on-chain instructions because they don’t correspond to
+a single instruction call.</p>
+<hr />
+<h2 id="b.5-top-critical-interactions-and-initial-technical-requirements-part-a.4">B.5
+— Top critical interactions and initial technical requirements (Part
+A.4)</h2>
+<p>I identified the two paths in deliverable §4 manually first
+(auto-approval loop, HITL loop), then prompted the AI for technical
+requirements.</p>
+<p><strong>My prompt:</strong></p>
+<blockquote>
+<p>Based on these two critical user interactions for Cordon — (Path A)
+agent submits intent, policy auto-approves under cap, transaction
+broadcasts; (Path B) agent submits intent, policy flags it, approver
+decides — what are the key technical requirements to build a POC on
+Solana / Anchor?</p>
+</blockquote>
+<p><strong>Synthesized AI output:</strong></p>
+<ul>
+<li>An Anchor program with instructions for registering an agent,
+submitting an intent, checking the intent against policy, approving, and
+rejecting.</li>
+<li>A <code>Policy</code> account per agent storing the rules and the
+approver set.</li>
+<li>A <code>PendingApproval</code> (the AI’s name; I renamed to
+<code>Intent</code>) account per submitted transaction.</li>
+<li>An off-chain SDK that wraps the agent’s signing path through these
+instructions.</li>
+<li>A dashboard that queries pending intents via
+<code>getProgramAccounts</code> with a memcmp filter.</li>
+<li>An on-chain event stream for the audit log.</li>
+</ul>
+<p><strong>My take:</strong></p>
+<p>This is correct and roughly what I’d already sketched in the prior
+Cordon repo. The one substantive edit was renaming
+<code>PendingApproval</code> → <code>Intent</code> and making the
+account hold the <em>full intent lifecycle</em>, not just the pending
+state. The reason: if “pending” and “approved” are two different account
+types, then the audit log has to be the union of two queries with two
+different account layouts. If <code>Intent</code> has a status enum that
+progresses
+(<code>Submitted → AutoApproved | Pending → HumanApproved | Rejected | Expired</code>),
+the audit log is one query against one account type, filterable by
+status. Cheaper to index, simpler to reason about.</p>
+<p>The AI also missed the kill-switch effect on
+<code>set_spend_cap</code> (a paused policy shouldn’t be tunable,
+otherwise a compromised authority can pause-then-loosen-then-resume). I
+added that constraint and propagated it into S4 / S21 in the
+deliverable.</p>
+<hr />
+<h2 id="b.6-adversarial-critique-part-b">B.6 — Adversarial critique
+(Part B)</h2>
+<p><strong>My prompt:</strong></p>
+<blockquote>
+<p>Review my core user functions / stories (deliverable §3 and §5 draft)
+and requirements (§6 draft). Considering Cordon’s value prop, do these
+stories truly hit the mark? Are the requirements granular enough to map
+to specific Anchor instructions, account types, and PDA seeds? What’s
+missing or unclear?</p>
+</blockquote>
+<p><strong>Synthesized critique:</strong></p>
+<ol type="1">
+<li><strong>“Agent” is ambiguous.</strong> The stories sometimes say
+“agent” when they mean the integrator and sometimes when they mean the
+runtime signer. Force a disambiguation across every story.</li>
+<li><strong>No story for the expiry case.</strong> What happens if an
+intent sits in the queue past the TTL and no approver acts? The stories
+cover approve and reject but not expire.</li>
+<li><strong>No story for the authority-transfer.</strong> The persona is
+defined but the function isn’t reified as a story.</li>
+<li><strong>The audit log is implied, not stated.</strong> “Cordon
+records the intent on-chain” appears nowhere as a numbered story; it’s
+only implicit in S8.</li>
+<li><strong>Setup stories conflate steps.</strong> “Integrator installs
+Cordon and configures their agent” is three actions: SDK install,
+keypair generation, policy creation.</li>
+<li><strong>No read stories.</strong> The deliverable has write stories
+(mutating on-chain state) but no read stories (querying it). The
+dashboard and the SDK both need read paths.</li>
+<li><strong>Rate limiting is hand-waved.</strong> “Under the rate limit”
+is in the policy check but isn’t grounded — what’s the window, where is
+the counter stored?</li>
+</ol>
+<p><strong>My response, item by item:</strong></p>
+<ol type="1">
+<li><strong>Valid.</strong> Renamed every actor across the deliverable.
+“Agent integrator” → off-chain code-writer (P1). “Agent signer” →
+runtime programmatic actor (P2). Fixed every story to name one or the
+other, never just “agent.”</li>
+<li><strong>Valid.</strong> Added S20 (drop on rejection or expiry) and
+added explicit <code>Intent.status == Expired</code> handling in S17 and
+the optional <code>expire_intent</code> instruction in S20’s
+requirements.</li>
+<li><strong>Valid.</strong> Added S22 (transfer authority) plus the
+two-step propose / accept mechanism.</li>
+<li><strong>Partially valid.</strong> I added S9 (“Cordon records the
+intent on-chain so the decision is auditable”) explicitly as a story for
+legibility, but in the on-chain requirements I noted that S9 is
+<em>covered</em> by S8 — the <code>Intent</code> account IS the on-chain
+record. No separate log account is needed. The reviewer’s instinct was
+right that the property needed to be named; the implementation collapses
+into one account type, not two.</li>
+<li><strong>Valid.</strong> Setup stories S1, S2, S3 in the deliverable
+are the split-out form. Original draft had a single “integrator sets up
+agent” story; refinement log entry C1 below has the before / after.</li>
+<li><strong>Valid.</strong> Added S23 (read pending queue) and S24 (read
+decision log) as explicit stories and grounded their account-layout
+requirements (memcmp-friendly status byte and agent_signer pubkey at
+fixed offsets).</li>
+<li><strong>Valid but deferred.</strong> Added “rate-limit window
+representation” as open question #3 in deliverable §7. For the
+requirements stage it’s enough to say “the policy check evaluates the
+rate limit”; choosing sliding-vs-fixed-vs-token-bucket is an
+architecture decision.</li>
+</ol>
+<p>The critique I <em>rejected</em>: an early draft of the AI critique
+also suggested adding stories for “approver requests more information
+from the agent before deciding.” That’s a real product feature but it
+isn’t a POC requirement — for the POC the approver makes a binary
+decision on the simulation output already on the <code>Intent</code>.
+Adding a request-info loop would require an off-chain channel (Slack,
+email) the POC doesn’t have. Flagged for post-POC.</p>
+<hr />
+<h2 id="b.7-part-c-refinement-log-granularity-atomicity-de-jargon">B.7 —
+Part C refinement log (granularity, atomicity, de-jargon)</h2>
+<p>Every change to a user story between the post-critique draft and the
+final §5 list, with before / after / rationale.</p>
+<h3 id="c1-atomicity-split">C1 — Atomicity split</h3>
+<ul>
+<li><strong>Before:</strong> “As an integrator, I install Cordon and set
+up my agent’s policy.”</li>
+<li><strong>After:</strong> S1 (install SDK) + S2 (generate keypair) +
+S3 (create policy account) + S4 (set spend cap) + S5 (add allowlist
+entry) + S6 (add approver).</li>
+<li><strong>Rationale:</strong> Original was six distinct actions in one
+sentence. Each maps to a different on-chain instruction (S3 →
+<code>register_agent</code>, S4 → <code>set_spend_cap</code>, etc.) or
+to no on-chain action at all (S1, S2 are off-chain). Splitting lets each
+on-chain requirement attach to one story.</li>
+</ul>
+<h3 id="c2-atomicity-split-on-the-runtime-path">C2 — Atomicity split on
+the runtime path</h3>
+<ul>
+<li><strong>Before:</strong> “As an agent, I submit a transaction and
+Cordon checks it and either it goes through or it gets queued.”</li>
+<li><strong>After:</strong> S7 (build tx) + S8 (submit intent) + S9
+(Cordon records intent) + S10 (Cordon checks against policy) + S11 (mark
+auto-approved) + S12 (broadcast).</li>
+<li><strong>Rationale:</strong> Original collapsed four distinct
+on-chain state transitions and one off-chain broadcast. The dashboard’s
+audit log query depends on each transition being its own story so that
+“what happened to intent X” can be read off the
+<code>Intent.status</code> history.</li>
+</ul>
+<h3 id="c3-actor-disambiguation">C3 — Actor disambiguation</h3>
+<ul>
+<li><strong>Before:</strong> “As an agent, I submit my transaction to
+Cordon.”</li>
+<li><strong>After:</strong> “As an agent signer, I submit that
+transaction to Cordon for a policy check.” (S8)</li>
+<li><strong>Rationale:</strong> “Agent” was ambiguous (see B.6 #1). The
+runtime signer is the actor; the integrator is the configurer.</li>
+</ul>
+<h3 id="c4-de-jargon">C4 — De-jargon</h3>
+<ul>
+<li><strong>Before:</strong> “As Cordon, I invoke the
+<code>check_intent</code> CPI against the policy program and mutate
+<code>Intent.status</code> based on the result.”</li>
+<li><strong>After:</strong> “As Cordon, I check the intent against the
+policy account’s rules.” (S10)</li>
+<li><strong>Rationale:</strong> “CPI” and “mutate state” are
+implementation language. The story should describe the action; the
+on-chain requirements (deliverable §6 under S10) can name the
+instruction and the state transition.</li>
+</ul>
+<h3 id="c5-de-jargon">C5 — De-jargon</h3>
+<ul>
+<li><strong>Before:</strong> “As an approver, I see the pending intents
+that match my pubkey in the approver set via a
+<code>getProgramAccounts</code> query with a memcmp filter.”</li>
+<li><strong>After:</strong> “As an approver, I open the dashboard and
+see every pending intent on agents I’m listed on.” (S15)</li>
+<li><strong>Rationale:</strong> The user story describes the user’s
+experience; the requirements document describes the query mechanism.
+Kept the <code>getProgramAccounts</code> / memcmp detail in §6 under S15
+where it belongs.</li>
+</ul>
+<h3 id="c6-atomicity-split-on-approver-action">C6 — Atomicity split on
+approver action</h3>
+<ul>
+<li><strong>Before:</strong> “As an approver, I review a pending intent
+and either approve or reject it.”</li>
+<li><strong>After:</strong> S16 (open and read details) + S17 (approve)
++ S18 (reject).</li>
+<li><strong>Rationale:</strong> Approve and reject are different
+on-chain instructions with different post-conditions. Opening the intent
+to read it is a third distinct action (no on-chain write). Three
+stories, three different requirements.</li>
+</ul>
+<h3 id="c7-missing-story-added">C7 — Missing story added</h3>
+<ul>
+<li><strong>Before:</strong> [no story]</li>
+<li><strong>After:</strong> S20 (“As an agent signer, I drop the
+transaction when an approver rejects it or the pending intent
+expires.”)</li>
+<li><strong>Rationale:</strong> The rejection and expiry paths were
+implicit in the design but absent from the story list. Without the
+story, the on-chain <code>expire_intent</code> requirement had nowhere
+to attach.</li>
+</ul>
+<h3 id="c8-missing-story-added">C8 — Missing story added</h3>
+<ul>
+<li><strong>Before:</strong> [no story]</li>
+<li><strong>After:</strong> S21 (kill switch), S22 (transfer
+authority)</li>
+<li><strong>Rationale:</strong> P4’s most important functions (F4.6,
+F4.7) had no corresponding stories. Without stories, no on-chain
+requirements would have been brainstormed in Part D. Added.</li>
+</ul>
+<h3 id="c9-read-stories-added">C9 — Read stories added</h3>
+<ul>
+<li><strong>Before:</strong> [no stories — only write paths]</li>
+<li><strong>After:</strong> S23 (read pending queue), S24 (read decision
+log)</li>
+<li><strong>Rationale:</strong> Critique #6. The on-chain account layout
+has read-side requirements (memcmp-friendly offsets) that only emerge if
+you write the read stories down.</li>
+</ul>
+<h3 id="c10-redundancy-elimination">C10 — Redundancy elimination</h3>
+<ul>
+<li><strong>Before:</strong> Earlier draft had both “As Cordon, I write
+the intent to the audit log” and “As Cordon, I record the intent
+on-chain so the decision is auditable.”</li>
+<li><strong>After:</strong> Single story S9.</li>
+<li><strong>Rationale:</strong> Same action described twice. The audit
+log <em>is</em> the on-chain record; there is no separate log account
+(see B.6 #4).</li>
+</ul>
+<h3 id="c11-de-jargon">C11 — De-jargon</h3>
+<ul>
+<li><strong>Before:</strong> “As a policy authority, I rotate the kill
+switch on the policy registry.”</li>
+<li><strong>After:</strong> “As a policy authority, I flip the kill
+switch to pause every new intent for my agent.” (S21)</li>
+<li><strong>Rationale:</strong> “Rotate” was the wrong verb (rotation
+implies key rotation). “Flip” is plain. Added the <em>consequence</em>
+(“pause every new intent for my agent”) so a non-technical reader
+understands what the action does.</li>
+</ul>
+<h3 id="c12-de-jargon">C12 — De-jargon</h3>
+<ul>
+<li><strong>Before:</strong> “As a policy authority, I transfer
+ownership of the <code>Policy</code> PDA to a new authority
+pubkey.”</li>
+<li><strong>After:</strong> “As a policy authority, I transfer policy
+authority to a new wallet.” (S22)</li>
+<li><strong>Rationale:</strong> “PDA” and “pubkey” are Solana-specific.
+“Policy authority” and “wallet” are the same idea in user-facing
+language.</li>
+</ul>
+<hr />
+<h2 id="b.8-part-d-approach-notes">B.8 — Part D approach notes</h2>
+<p>The deliverable §6 brainstorm follows the assignment’s prescribed
+pattern (one story → bulleted on-chain requirements), but two patterns
+are worth flagging because they shaped a lot of the bullets:</p>
+<p><strong>1. “No on-chain requirements” is a valid bullet.</strong>
+Several stories (S1, S2, S7, S12, S15, S16, S19, S20, S23, S24) are
+off-chain or read-only. I marked them explicitly rather than inventing
+on-chain machinery to fill space. A story that doesn’t need an
+instruction shouldn’t get one.</p>
+<p><strong>2. Several stories collapse into one instruction with state
+transitions.</strong> S8 + S9 + S10 + S11 all describe the lifecycle of
+one <code>Intent</code> account. The requirements list reflects that —
+<code>submit_intent</code> covers S8 and S9; <code>check_intent</code>
+(or the folded version inside <code>submit_intent</code>) covers S10 and
+S11. I noted the open question in §7 (#1) rather than pretending the
+architecture decision was already made.</p>
+<p><strong>3. Validation and gating are first-class requirements, not
+afterthoughts.</strong> Every mutation instruction has a gating bullet
+(who can sign) and at least one failure bullet (when it must fail). This
+is the granularity needed to map to Anchor account constraints
+(<code>has_one</code>, <code>constraint = ...</code>) without ambiguity
+in the next assignment.</p>
+<hr />
+<h2 id="appendix-sources">Appendix — Sources</h2>
+<ul>
+<li>Capstone Assignment 1 (Cordon proposal):
+<code>cordon-proposal.pdf</code> at repo root.</li>
+<li>Cordon code-in-progress: <a href="https://github.com/Hijanhv/cordon" class="uri">https://github.com/Hijanhv/cordon</a></li>
+<li>Anchor framework reference (PDA seeds, account constraints,
+instruction signatures): <a href="https://www.anchor-lang.com/" class="uri">https://www.anchor-lang.com/</a></li>
+<li>Solana <code>getProgramAccounts</code> + memcmp filter docs: <a href="https://solana.com/docs/rpc/http/getprogramaccounts" class="uri">https://solana.com/docs/rpc/http/getprogramaccounts</a></li>
+</ul>
+</body>
+</html>
