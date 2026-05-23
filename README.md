@@ -2,6 +2,10 @@
 
 Capstone Assignment 2 for the Turbin3 Builders Cohort. This repo holds my submission — the deliverable, the process appendix, and the script that builds them into the single PDF the assignment asks for.
 
+> **Submission PDF →** [`dist/cordon-user-stories.pdf`](./dist/cordon-user-stories.pdf)
+> Direct download: <https://github.com/Hijanhv/capstone-user-stories-onchain/raw/main/dist/cordon-user-stories.pdf>
+> Single file, Part A and Part B concatenated with a table of contents. This is the file to upload to the assignment portal.
+
 The project this assignment is about is **Cordon**, a transaction firewall for Solana AI agents. I defined it in Capstone Assignment 1; the refined value proposition from that work is the constraint everything in this submission maps back to. The full prior proposal is checked in at the root of this repo as [`cordon-proposal.pdf`](./cordon-proposal.pdf), and a one-line recap is at the top of the deliverable.
 
 ## What's in here
