@@ -1,10 +1,10 @@
 # Part A — User Stories & On-Chain Requirements
 
 **Project:** Cordon — transaction firewall for Solana AI agents
-**Author:** Janhavi Chavada · Turbin3 Builders Cohort
+**Author:** Janhavi Chavada · Turbin3 Builders Cohort · Capstone Assignment 2
 **Input document:** [`cordon-proposal.pdf`](https://github.com/Hijanhv/cordon) (Capstone Assignment 1)
 
-This document is the clean, final deliverable. The process — prompts, AI outputs, my critiques, refinement log — lives in [`part-b-process-appendix.md`](./part-b-process-appendix.md).
+This is the clean deliverable for Assignment 2. It picks up from the refined value proposition in Assignment 1 and translates it into the personas, user stories, and on-chain requirements I need before I can start designing the Anchor program in Assignment 3. The process I went through to get here — every AI prompt, every override, the full before/after refinement log — lives in [`part-b-process-appendix.md`](./part-b-process-appendix.md).
 
 ---
 
@@ -33,7 +33,7 @@ A human (or, in production, a Squads multisig) listed in the policy's approver s
 The on-chain owner of the policy registry account for a given agent. Mutates spend caps, allowlists, time windows, the approver set, and the kill switch. Day-1 default is the integrator's wallet; production target is a multisig or DAO. Distinct from the approver: the policy authority changes the rules; the approver applies them on a single pending transaction.
 
 ### Why these four and not more
-The minimal cast that fully exercises the loop is: someone who configured it (P1 + P4), the actor whose intents get checked (P2), the human who decides on flagged ones (P3). Add a fifth and you're adding someone who reads outputs, not someone who drives the critical path. The cohort timeline doesn't have room for personas that don't shift the POC scope.
+The smallest cast that fully exercises the loop is: someone who configured it (P1 + P4), the actor whose intents get checked (P2), and the human who decides on flagged ones (P3). Any fifth persona I considered — compliance officer, end user of an agent-managed treasury, protocol risk manager, regulator — reads outputs that the four above already produce. They don't drive the critical path, so adding them inflates story count without testing anything new. My capstone window is six weeks; I'm scoping personas the same way I'm scoping instructions.
 
 ---
 
@@ -285,7 +285,7 @@ Anchor program working name: `cordon_policy`. Two account types carry most of th
 
 ## 7. Open questions handed to the next assignment
 
-These are the things I deliberately didn't decide here, because they belong in the architecture assignment (smart contract design and diagramming), not in requirements.
+I deliberately didn't decide the items below. They are real architecture calls — picking one closes off design space — and they belong in Capstone Assignment 3 (smart-contract architecture and diagramming), not in a requirements doc. Naming them here so I don't lose them between assignments.
 
 1. **Should `check_intent` be a separate instruction or folded into `submit_intent`?** Trade-off: separating it lets off-chain simulation happen between the two, but doubles the round trips. Likely fold them together for the POC and split if simulation needs the gap.
 2. **Account size for the bounded vecs (allowlist, approvers).** Picked illustrative maxes (32 programs, 8 approvers); the architecture assignment should pick real ones based on rent cost and realistic fleet shapes.

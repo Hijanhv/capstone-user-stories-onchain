@@ -123,10 +123,14 @@ Sources</a></li>
 &amp; On-Chain Requirements</h1>
 <p><strong>Project:</strong> Cordon — transaction firewall for Solana AI
 agents <strong>Author:</strong> Janhavi Chavada · Turbin3 Builders
-Cohort <strong>Input document:</strong> <a href="https://github.com/Hijanhv/cordon"><code>cordon-proposal.pdf</code></a>
+Cohort · Capstone Assignment 2 <strong>Input document:</strong> <a href="https://github.com/Hijanhv/cordon"><code>cordon-proposal.pdf</code></a>
 (Capstone Assignment 1)</p>
-<p>This document is the clean, final deliverable. The process — prompts,
-AI outputs, my critiques, refinement log — lives in <a href="./part-b-process-appendix.md"><code>part-b-process-appendix.md</code></a>.</p>
+<p>This is the clean deliverable for Assignment 2. It picks up from the
+refined value proposition in Assignment 1 and translates it into the
+personas, user stories, and on-chain requirements I need before I can
+start designing the Anchor program in Assignment 3. The process I went
+through to get here — every AI prompt, every override, the full
+before/after refinement log — lives in <a href="./part-b-process-appendix.md"><code>part-b-process-appendix.md</code></a>.</p>
 <hr />
 <h2 id="refined-value-proposition-one-line-recap">1. Refined value
 proposition (one-line recap)</h2>
@@ -173,12 +177,15 @@ is a multisig or DAO. Distinct from the approver: the policy authority
 changes the rules; the approver applies them on a single pending
 transaction.</p>
 <h3 id="why-these-four-and-not-more">Why these four and not more</h3>
-<p>The minimal cast that fully exercises the loop is: someone who
-configured it (P1 + P4), the actor whose intents get checked (P2), the
-human who decides on flagged ones (P3). Add a fifth and you’re adding
-someone who reads outputs, not someone who drives the critical path. The
-cohort timeline doesn’t have room for personas that don’t shift the POC
-scope.</p>
+<p>The smallest cast that fully exercises the loop is: someone who
+configured it (P1 + P4), the actor whose intents get checked (P2), and
+the human who decides on flagged ones (P3). Any fifth persona I
+considered — compliance officer, end user of an agent-managed treasury,
+protocol risk manager, regulator — reads outputs that the four above
+already produce. They don’t drive the critical path, so adding them
+inflates story count without testing anything new. My capstone window is
+six weeks; I’m scoping personas the same way I’m scoping
+instructions.</p>
 <hr />
 <h2 id="function-map">3. Function map</h2>
 <p>One concrete, single-action function per row. No “manages” or
@@ -629,9 +636,11 @@ of scope for this assignment, flagged for architecture.</p>
 <hr />
 <h2 id="open-questions-handed-to-the-next-assignment">7. Open questions
 handed to the next assignment</h2>
-<p>These are the things I deliberately didn’t decide here, because they
-belong in the architecture assignment (smart contract design and
-diagramming), not in requirements.</p>
+<p>I deliberately didn’t decide the items below. They are real
+architecture calls — picking one closes off design space — and they
+belong in Capstone Assignment 3 (smart-contract architecture and
+diagramming), not in a requirements doc. Naming them here so I don’t
+lose them between assignments.</p>
 <ol type="1">
 <li><strong>Should <code>check_intent</code> be a separate instruction
 or folded into <code>submit_intent</code>?</strong> Trade-off:
@@ -655,15 +664,20 @@ how Cordon verifies a Squads approval signature inside
 requirements one.</li>
 </ol>
 <h1 id="part-b-process-appendix">Part B — Process Appendix</h1>
-<p>The clean deliverable lives in <a href="./part-a-deliverable.md"><code>part-a-deliverable.md</code></a>.
-This file is the log of how I got there: prompts I ran, what the AI gave
-back, what I agreed with, what I overrode, and the explicit before/after
-refinement log for Part C.</p>
+<p>The clean deliverable is in <a href="./part-a-deliverable.md"><code>part-a-deliverable.md</code></a>.
+This file is how I got there: every AI prompt I ran, the synthesized
+output, the parts I agreed with, the parts I overrode, and the explicit
+before/after refinement log for the Part C atomicity pass. The structure
+mirrors the assignment’s own Parts A through D so a grader can
+cross-check any claim in the deliverable against the reasoning that
+produced it.</p>
 <h2 id="b.1-inputs">B.1 — Inputs</h2>
-<p>The single input to this assignment is the refined project proposal
-from the previous Capstone assignment (<code>cordon-proposal.pdf</code>,
-included at the root of this repo). The value proposition I’m carrying
-forward, verbatim from §1 of that proposal:</p>
+<p>The single input is the refined project proposal from Capstone
+Assignment 1 (<code>cordon-proposal.pdf</code> at the root of this
+repo). I’m not redoing the market analysis here — it’s settled — but the
+value prop is the constraint everything in this assignment has to map
+back to. Quoting it verbatim from §1 of that proposal so a grader
+doesn’t have to flip files:</p>
 <blockquote>
 <p>Cordon is the policy enforcement and HITL approval layer that sits
 between an AI agent’s intent and the Solana network. You drop the Rust
@@ -758,27 +772,28 @@ four were essentially what I’d written myself. Its rationale for the
 compliance officer was “they validate the audit log property of the
 system, which is a core value area.”</p>
 <p><strong>My take and final decision:</strong></p>
-<p>I kept four of the five and dropped compliance officer. The
-compliance officer reads outputs that the other four produce; they don’t
-drive the loop. Including them as a POC persona would add user stories
-(S-something: compliance officer queries the audit log for a date range)
-that depend on every other persona’s stories already working. Including
-them inflates scope without proving anything new.</p>
+<p>I kept four of the five and dropped compliance officer. They read
+outputs the other four already produce; they don’t drive the loop.
+Including them as a POC persona would add a story like “compliance
+officer queries the audit log for a date range” that only makes sense
+once every other persona’s stories work. That’s scope inflation without
+proving anything new — same reasoning I used in the prior assignment
+when I demoted enterprise from primary to secondary.</p>
 <p>I also collapsed “policy author” and “policy authority” from my
-brainstorm into a single persona (P4). They are functionally the same on
-day 1, and the distinction (someone who <em>drafts</em> policy text
-vs. someone who <em>signs the on-chain mutation</em>) only matters when
-there’s a policy review process between drafting and signing — which is
-post-POC.</p>
+brainstorm into one persona (P4). On day 1 they’re the same person. The
+distinction (someone who <em>drafts</em> policy text vs. someone who
+<em>signs the on-chain mutation</em>) only matters once there’s a review
+process between drafting and signing, and a single capstone deployment
+isn’t going to have that.</p>
 <p>Final four personas: P1 integrator, P2 agent signer, P3 approver, P4
-policy authority. See deliverable §2.</p>
+policy authority. Documented in deliverable §2.</p>
 <p><strong>Where I disagreed with the AI:</strong> the compliance
-officer call. It’s not that the persona is wrong — it’s that they’re a
-<em>consumer</em> of POC outputs, not a <em>driver</em> of them, and the
-POC is scope-limited to what proves the loop.</p>
+officer call. Not because the persona is wrong — it’s because they’re a
+consumer of outputs, not a driver of the loop, and the POC scope has to
+stop at what proves the loop.</p>
 <p><strong>Where I agreed:</strong> the disambiguation between
 integrator (writes code) and agent signer (runs code). The AI’s framing
-here was tighter than my brainstorm draft and I kept it.</p>
+here was sharper than my brainstorm draft and I kept it verbatim.</p>
 <hr />
 <h2 id="b.4-function-mapping-prompt-part-a.3">B.4 — Function mapping
 prompt (Part A.3)</h2>
@@ -848,22 +863,26 @@ instructions.</li>
 <li>An on-chain event stream for the audit log.</li>
 </ul>
 <p><strong>My take:</strong></p>
-<p>This is correct and roughly what I’d already sketched in the prior
-Cordon repo. The one substantive edit was renaming
-<code>PendingApproval</code> → <code>Intent</code> and making the
+<p>This is correct and matches what I’d already sketched in the Cordon
+repo. The substantive edit I made was renaming
+<code>PendingApproval</code> → <code>Intent</code> and making one
 account hold the <em>full intent lifecycle</em>, not just the pending
 state. The reason: if “pending” and “approved” are two different account
-types, then the audit log has to be the union of two queries with two
-different account layouts. If <code>Intent</code> has a status enum that
-progresses
+types, the audit log becomes a union of two queries against two
+different layouts. With one <code>Intent</code> account that progresses
+through a status enum
 (<code>Submitted → AutoApproved | Pending → HumanApproved | Rejected | Expired</code>),
 the audit log is one query against one account type, filterable by
-status. Cheaper to index, simpler to reason about.</p>
-<p>The AI also missed the kill-switch effect on
-<code>set_spend_cap</code> (a paused policy shouldn’t be tunable,
-otherwise a compromised authority can pause-then-loosen-then-resume). I
-added that constraint and propagated it into S4 / S21 in the
-deliverable.</p>
+status. Cheaper to index, simpler to reason about, and
+<code>getProgramAccounts</code> with a memcmp on <code>status</code>
+gives the dashboard the pending queue and the historical log from the
+same code path.</p>
+<p>The AI also missed an interaction I caught manually: the kill switch
+has to disable <code>set_spend_cap</code>, not just
+<code>submit_intent</code>. Otherwise a compromised authority can pause
+the agent, quietly loosen the cap, then unpause — which defeats the
+entire point of having a kill switch. I propagated that constraint into
+S4 and S21 in the deliverable.</p>
 <hr />
 <h2 id="b.6-adversarial-critique-part-b">B.6 — Adversarial critique
 (Part B)</h2>
@@ -900,43 +919,49 @@ the counter stored?</li>
 </ol>
 <p><strong>My response, item by item:</strong></p>
 <ol type="1">
-<li><strong>Valid.</strong> Renamed every actor across the deliverable.
-“Agent integrator” → off-chain code-writer (P1). “Agent signer” →
-runtime programmatic actor (P2). Fixed every story to name one or the
-other, never just “agent.”</li>
-<li><strong>Valid.</strong> Added S20 (drop on rejection or expiry) and
-added explicit <code>Intent.status == Expired</code> handling in S17 and
-the optional <code>expire_intent</code> instruction in S20’s
-requirements.</li>
-<li><strong>Valid.</strong> Added S22 (transfer authority) plus the
-two-step propose / accept mechanism.</li>
-<li><strong>Partially valid.</strong> I added S9 (“Cordon records the
-intent on-chain so the decision is auditable”) explicitly as a story for
-legibility, but in the on-chain requirements I noted that S9 is
-<em>covered</em> by S8 — the <code>Intent</code> account IS the on-chain
-record. No separate log account is needed. The reviewer’s instinct was
-right that the property needed to be named; the implementation collapses
-into one account type, not two.</li>
-<li><strong>Valid.</strong> Setup stories S1, S2, S3 in the deliverable
-are the split-out form. Original draft had a single “integrator sets up
-agent” story; refinement log entry C1 below has the before / after.</li>
-<li><strong>Valid.</strong> Added S23 (read pending queue) and S24 (read
-decision log) as explicit stories and grounded their account-layout
-requirements (memcmp-friendly status byte and agent_signer pubkey at
-fixed offsets).</li>
-<li><strong>Valid but deferred.</strong> Added “rate-limit window
-representation” as open question #3 in deliverable §7. For the
-requirements stage it’s enough to say “the policy check evaluates the
-rate limit”; choosing sliding-vs-fixed-vs-token-bucket is an
-architecture decision.</li>
+<li><strong>Took it.</strong> “Agent” was doing two jobs and that was on
+me. I renamed across the whole deliverable: “agent integrator” is the
+off-chain code-writer (P1); “agent signer” is the runtime programmatic
+actor (P2). Every story now names one or the other.</li>
+<li><strong>Took it.</strong> Added S20 (drop on rejection or expiry)
+and wrote explicit <code>Intent.status == Expired</code> handling into
+S17. Also added the optional <code>expire_intent</code> instruction
+inside S20’s requirements so dead intents can be garbage-collected
+without waiting for the next approver action.</li>
+<li><strong>Took it.</strong> Added S22 (transfer authority) with a
+two-step propose-then-accept mechanism so a typo can’t strand the policy
+authority on a pubkey nobody controls.</li>
+<li><strong>Partially took it.</strong> I added S9 (“Cordon records the
+intent on-chain so the decision is auditable”) as a named story for
+legibility. But in the requirements I noted S9 is <em>covered by</em> S8
+— the <code>Intent</code> account IS the on-chain record, there’s no
+separate log. The critique’s instinct was right that the audit property
+needed to be named explicitly. The implementation collapses to one
+account type, not two.</li>
+<li><strong>Took it.</strong> Setup stories S1 through S6 are the
+split-out form. The original draft had one mega-story; refinement log
+entry C1 below has the before/after.</li>
+<li><strong>Took it.</strong> Added S23 (read pending queue) and S24
+(read decision log). These forced a real account-layout requirement to
+surface — the <code>status</code> byte and <code>agent_signer</code>
+pubkey both need to sit at fixed, low offsets so
+<code>getProgramAccounts</code> memcmp filters are cheap. Without the
+read stories, that constraint would have shown up too late.</li>
+<li><strong>Acknowledged, deferred.</strong> The rate-limit window
+question is real (sliding window vs. fixed window vs. token bucket each
+have different on-chain math). But at the requirements stage it’s enough
+to say the policy check evaluates a rate limit. Picking the window
+representation is an architecture call. Flagged in deliverable §7
+#3.</li>
 </ol>
-<p>The critique I <em>rejected</em>: an early draft of the AI critique
-also suggested adding stories for “approver requests more information
-from the agent before deciding.” That’s a real product feature but it
-isn’t a POC requirement — for the POC the approver makes a binary
-decision on the simulation output already on the <code>Intent</code>.
-Adding a request-info loop would require an off-chain channel (Slack,
-email) the POC doesn’t have. Flagged for post-POC.</p>
+<p><strong>The critique I rejected.</strong> An early version of the
+critique also pushed for a story where “the approver asks the agent for
+more information before deciding.” It’s a real product feature for a v2,
+but it’s not a POC requirement — for the POC the approver decides on the
+simulation output already attached to the <code>Intent</code>. Adding a
+request-info loop would require an off-chain channel (Slack, email,
+webhook) the POC doesn’t have, and the assignment is explicit about
+staying on-chain. Logged as post-POC; not in the story list.</p>
 <hr />
 <h2 id="b.7-part-c-refinement-log-granularity-atomicity-de-jargon">B.7 —
 Part C refinement log (granularity, atomicity, de-jargon)</h2>

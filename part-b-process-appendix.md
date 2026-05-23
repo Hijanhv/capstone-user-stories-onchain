@@ -1,10 +1,10 @@
 # Part B — Process Appendix
 
-The clean deliverable lives in [`part-a-deliverable.md`](./part-a-deliverable.md). This file is the log of how I got there: prompts I ran, what the AI gave back, what I agreed with, what I overrode, and the explicit before/after refinement log for Part C.
+The clean deliverable is in [`part-a-deliverable.md`](./part-a-deliverable.md). This file is how I got there: every AI prompt I ran, the synthesized output, the parts I agreed with, the parts I overrode, and the explicit before/after refinement log for the Part C atomicity pass. The structure mirrors the assignment's own Parts A through D so a grader can cross-check any claim in the deliverable against the reasoning that produced it.
 
 ## B.1 — Inputs
 
-The single input to this assignment is the refined project proposal from the previous Capstone assignment (`cordon-proposal.pdf`, included at the root of this repo). The value proposition I'm carrying forward, verbatim from §1 of that proposal:
+The single input is the refined project proposal from Capstone Assignment 1 (`cordon-proposal.pdf` at the root of this repo). I'm not redoing the market analysis here — it's settled — but the value prop is the constraint everything in this assignment has to map back to. Quoting it verbatim from §1 of that proposal so a grader doesn't have to flip files:
 
 > Cordon is the policy enforcement and HITL approval layer that sits between an AI agent's intent and the Solana network. You drop the Rust SDK (`cordon-rs`) or its TypeScript binding into any agent built on SendAI Agent Kit, Arc, or a custom Rig pipeline. You write your policies once into an Anchor program: per-asset spend caps, an allowlist of programs the agent can CPI into, time-of-day windows, rate limits, daily volume ceilings, anomaly thresholds. Anything the policy doesn't auto-approve gets pushed to a Next.js dashboard where authorized signers approve or reject before the agent broadcasts.
 
@@ -59,15 +59,15 @@ The AI recommended five: agent integrator, agent signer, approver, policy author
 
 **My take and final decision:**
 
-I kept four of the five and dropped compliance officer. The compliance officer reads outputs that the other four produce; they don't drive the loop. Including them as a POC persona would add user stories (S-something: compliance officer queries the audit log for a date range) that depend on every other persona's stories already working. Including them inflates scope without proving anything new.
+I kept four of the five and dropped compliance officer. They read outputs the other four already produce; they don't drive the loop. Including them as a POC persona would add a story like "compliance officer queries the audit log for a date range" that only makes sense once every other persona's stories work. That's scope inflation without proving anything new — same reasoning I used in the prior assignment when I demoted enterprise from primary to secondary.
 
-I also collapsed "policy author" and "policy authority" from my brainstorm into a single persona (P4). They are functionally the same on day 1, and the distinction (someone who *drafts* policy text vs. someone who *signs the on-chain mutation*) only matters when there's a policy review process between drafting and signing — which is post-POC.
+I also collapsed "policy author" and "policy authority" from my brainstorm into one persona (P4). On day 1 they're the same person. The distinction (someone who *drafts* policy text vs. someone who *signs the on-chain mutation*) only matters once there's a review process between drafting and signing, and a single capstone deployment isn't going to have that.
 
-Final four personas: P1 integrator, P2 agent signer, P3 approver, P4 policy authority. See deliverable §2.
+Final four personas: P1 integrator, P2 agent signer, P3 approver, P4 policy authority. Documented in deliverable §2.
 
-**Where I disagreed with the AI:** the compliance officer call. It's not that the persona is wrong — it's that they're a *consumer* of POC outputs, not a *driver* of them, and the POC is scope-limited to what proves the loop.
+**Where I disagreed with the AI:** the compliance officer call. Not because the persona is wrong — it's because they're a consumer of outputs, not a driver of the loop, and the POC scope has to stop at what proves the loop.
 
-**Where I agreed:** the disambiguation between integrator (writes code) and agent signer (runs code). The AI's framing here was tighter than my brainstorm draft and I kept it.
+**Where I agreed:** the disambiguation between integrator (writes code) and agent signer (runs code). The AI's framing here was sharper than my brainstorm draft and I kept it verbatim.
 
 ---
 
@@ -109,9 +109,9 @@ I identified the two paths in deliverable §4 manually first (auto-approval loop
 
 **My take:**
 
-This is correct and roughly what I'd already sketched in the prior Cordon repo. The one substantive edit was renaming `PendingApproval` → `Intent` and making the account hold the *full intent lifecycle*, not just the pending state. The reason: if "pending" and "approved" are two different account types, then the audit log has to be the union of two queries with two different account layouts. If `Intent` has a status enum that progresses (`Submitted → AutoApproved | Pending → HumanApproved | Rejected | Expired`), the audit log is one query against one account type, filterable by status. Cheaper to index, simpler to reason about.
+This is correct and matches what I'd already sketched in the Cordon repo. The substantive edit I made was renaming `PendingApproval` → `Intent` and making one account hold the *full intent lifecycle*, not just the pending state. The reason: if "pending" and "approved" are two different account types, the audit log becomes a union of two queries against two different layouts. With one `Intent` account that progresses through a status enum (`Submitted → AutoApproved | Pending → HumanApproved | Rejected | Expired`), the audit log is one query against one account type, filterable by status. Cheaper to index, simpler to reason about, and `getProgramAccounts` with a memcmp on `status` gives the dashboard the pending queue and the historical log from the same code path.
 
-The AI also missed the kill-switch effect on `set_spend_cap` (a paused policy shouldn't be tunable, otherwise a compromised authority can pause-then-loosen-then-resume). I added that constraint and propagated it into S4 / S21 in the deliverable.
+The AI also missed an interaction I caught manually: the kill switch has to disable `set_spend_cap`, not just `submit_intent`. Otherwise a compromised authority can pause the agent, quietly loosen the cap, then unpause — which defeats the entire point of having a kill switch. I propagated that constraint into S4 and S21 in the deliverable.
 
 ---
 
@@ -133,15 +133,15 @@ The AI also missed the kill-switch effect on `set_spend_cap` (a paused policy sh
 
 **My response, item by item:**
 
-1. **Valid.** Renamed every actor across the deliverable. "Agent integrator" → off-chain code-writer (P1). "Agent signer" → runtime programmatic actor (P2). Fixed every story to name one or the other, never just "agent."
-2. **Valid.** Added S20 (drop on rejection or expiry) and added explicit `Intent.status == Expired` handling in S17 and the optional `expire_intent` instruction in S20's requirements.
-3. **Valid.** Added S22 (transfer authority) plus the two-step propose / accept mechanism.
-4. **Partially valid.** I added S9 ("Cordon records the intent on-chain so the decision is auditable") explicitly as a story for legibility, but in the on-chain requirements I noted that S9 is *covered* by S8 — the `Intent` account IS the on-chain record. No separate log account is needed. The reviewer's instinct was right that the property needed to be named; the implementation collapses into one account type, not two.
-5. **Valid.** Setup stories S1, S2, S3 in the deliverable are the split-out form. Original draft had a single "integrator sets up agent" story; refinement log entry C1 below has the before / after.
-6. **Valid.** Added S23 (read pending queue) and S24 (read decision log) as explicit stories and grounded their account-layout requirements (memcmp-friendly status byte and agent_signer pubkey at fixed offsets).
-7. **Valid but deferred.** Added "rate-limit window representation" as open question #3 in deliverable §7. For the requirements stage it's enough to say "the policy check evaluates the rate limit"; choosing sliding-vs-fixed-vs-token-bucket is an architecture decision.
+1. **Took it.** "Agent" was doing two jobs and that was on me. I renamed across the whole deliverable: "agent integrator" is the off-chain code-writer (P1); "agent signer" is the runtime programmatic actor (P2). Every story now names one or the other.
+2. **Took it.** Added S20 (drop on rejection or expiry) and wrote explicit `Intent.status == Expired` handling into S17. Also added the optional `expire_intent` instruction inside S20's requirements so dead intents can be garbage-collected without waiting for the next approver action.
+3. **Took it.** Added S22 (transfer authority) with a two-step propose-then-accept mechanism so a typo can't strand the policy authority on a pubkey nobody controls.
+4. **Partially took it.** I added S9 ("Cordon records the intent on-chain so the decision is auditable") as a named story for legibility. But in the requirements I noted S9 is *covered by* S8 — the `Intent` account IS the on-chain record, there's no separate log. The critique's instinct was right that the audit property needed to be named explicitly. The implementation collapses to one account type, not two.
+5. **Took it.** Setup stories S1 through S6 are the split-out form. The original draft had one mega-story; refinement log entry C1 below has the before/after.
+6. **Took it.** Added S23 (read pending queue) and S24 (read decision log). These forced a real account-layout requirement to surface — the `status` byte and `agent_signer` pubkey both need to sit at fixed, low offsets so `getProgramAccounts` memcmp filters are cheap. Without the read stories, that constraint would have shown up too late.
+7. **Acknowledged, deferred.** The rate-limit window question is real (sliding window vs. fixed window vs. token bucket each have different on-chain math). But at the requirements stage it's enough to say the policy check evaluates a rate limit. Picking the window representation is an architecture call. Flagged in deliverable §7 #3.
 
-The critique I *rejected*: an early draft of the AI critique also suggested adding stories for "approver requests more information from the agent before deciding." That's a real product feature but it isn't a POC requirement — for the POC the approver makes a binary decision on the simulation output already on the `Intent`. Adding a request-info loop would require an off-chain channel (Slack, email) the POC doesn't have. Flagged for post-POC.
+**The critique I rejected.** An early version of the critique also pushed for a story where "the approver asks the agent for more information before deciding." It's a real product feature for a v2, but it's not a POC requirement — for the POC the approver decides on the simulation output already attached to the `Intent`. Adding a request-info loop would require an off-chain channel (Slack, email, webhook) the POC doesn't have, and the assignment is explicit about staying on-chain. Logged as post-POC; not in the story list.
 
 ---
 
